@@ -5,17 +5,18 @@ HTTP server used as an interface to tc command. Can limit upload/download bandwi
 ### Use with golang
 * Install [golang](https://golang.org/)
 
-* Add dependencies:
+* Build:
 ```
-go get
+make
 ```
+
 * Run (may need root privilege):
 ```
-go run tc-rest-controller.go -iu <interface name> -p <port | default:9010>
+./bin/tc-rest-controller -iu <interface name | default:eth0> -p <port | default:9010>
 ```
 * For help:
 ```
-go run tc-rest-controller.go -h
+./bin/tc-rest-controller -h
 ```
 
 ### Use with the docker image
@@ -49,23 +50,14 @@ GET, PUT,DELETE /api/{upload,download}/netem   PUT_JSON:{"delay":"50", "loss":"1
 At the beginning, use POST requests on **/api/{upload, download}/limit/{limit value in kbps}** before using **/api/{upload,download}/netem** because the netem is created and deleted in **/api/{upload, download}/limit**. The **DELETE** request on **/api/{upload,download}/netem** just reset the delay and percent of packet loss to the minimal values.
 
 ### Build the docker image
-First, **add dependencies:**
-```
-go get
-```
-Then, use the **Makefile to**:
 
-* Compile the go code:
-```
-make build
-```
 
 * Build the docker image:
 ```
-make
+make docker-build
 ```
 
-* Build and push
+* Build and push the docker image:
 ```
 make docker-push
 ```
@@ -73,6 +65,16 @@ make docker-push
 * Clean the go build:
 ```
 make clean
+```
+
+* Clean the go dependencies:
+```
+make clean-go
+```
+
+* Clean the docker images:
+```
+make clean-docker
 ```
 
 * Clean the go build, stop the containers and remove the docker images:

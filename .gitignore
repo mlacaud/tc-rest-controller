@@ -1,3 +1,4 @@
 .*
 bin/
-src/
+src/github.com/
+pkg/

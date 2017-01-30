@@ -1,29 +1,42 @@
+GO_APP=tc-rest-controller
+
+GOPATH=$(PWD)
+
+BUILD_PACKAGE=tc-rest-controller
+BUILD_OUTPUT=bin/
+BUILD_BIN=tc-rest-controller
+
 DOCKER_REPO=mlacaud
 DOCKER_IMAGE=tc-rest-controller
 DOCKER_TAG=latest
 
-BUILD_OUTPUT=bin/
-BUILD_BIN=tc-rest-controller
-
-EXEC=docker-build
+EXEC=build
 
 
 all: $(EXEC)
 
-build:
-	go build -tags netgo -a -v -o $(BUILD_OUTPUT)$(BUILD_BIN)
+get:
+	go get $(GO_APP)
+
+install: get
+	go install $(GO_APP)
+
+build: install
+	go build -tags netgo -a -v -o $(BUILD_OUTPUT)$(BUILD_BIN) $(BUILD_PACKAGE)
 
 docker-build: build
 	docker build -t $(DOCKER_REPO)/$(DOCKER_IMAGE):$(DOCKER_TAG) .
 
-docker-push: build docker-build
+docker-push: docker-build
 	docker push $(DOCKER_REPO)/$(DOCKER_IMAGE):$(DOCKER_TAG)
 
 clean:
 	rm -r $(BUILD_OUTPUT)
 
+clean-go:
+	rm -r pkg src/github.com
 
 clean-docker:
 	docker rmi -f $(DOCKER_REPO)/$(DOCKER_IMAGE):$(DOCKER_TAG)
 
-mrproper: clean-docker clean
+mrproper: clean-go clean-docker clean
