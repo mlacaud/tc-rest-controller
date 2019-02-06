@@ -1,6 +1,7 @@
 GO_APP=tc-rest-controller
+GO_MAIN=tc-rest-controller
 
-GOPATH=$(PWD)
+GOPATH=${PWD}
 
 BUILD_PACKAGE=tc-rest-controller
 BUILD_OUTPUT=bin/
@@ -15,13 +16,13 @@ EXEC=build
 
 all: $(EXEC)
 
-get:
-	go get $(GO_APP)
+get: 
+	go get $(GO_MAIN)
 
-install: get
-	go install $(GO_APP)
+install: get 
+	go install $(GO_MAIN)
 
-build: install
+build: get 
 	go build -tags netgo -a -v -o $(BUILD_OUTPUT)$(BUILD_BIN) $(BUILD_PACKAGE)
 
 docker-build: build
@@ -39,4 +40,4 @@ clean-go:
 clean-docker:
 	docker rmi -f $(DOCKER_REPO)/$(DOCKER_IMAGE):$(DOCKER_TAG)
 
-mrproper: clean-go clean-docker clean
+mrproper: clean-go clean clean-docker
